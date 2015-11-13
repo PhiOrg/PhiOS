@@ -1,7 +1,10 @@
+/*
+ * gdt.h -- global descriptor table
+ */
 #ifndef PhiOS_gdt
 #define PhiOS_gdt
 
-#include <common.h>
+#include <sys/types.h>
 
 // This structure contains the value of one GDT entry.
 // We use the attribute 'packed' to tell GCC not to change

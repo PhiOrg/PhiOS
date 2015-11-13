@@ -1,7 +1,10 @@
+/*
+ * idt.h -- interrupt descriptor table
+ */
 #ifndef PhiOS_idt
 #define PhiOS_idt
 
-#include <common.h>
+#include <sys/types.h>
 
 // A struct describing an interrupt gate.
 struct idt_entry_struct

@@ -1,4 +1,6 @@
 #include <idt.h>
+#include <common.h>
+#include <irq.h>
 
 extern void a_idt_flush(p_uint32);
 
@@ -32,6 +34,18 @@ void idt_init(void)
 
     __idt_memset((char*)&idt_entries, sizeof(idt_entry_t)*256);
 
+    // Remap the irq table.
+    outb(0x20, 0x11);
+    outb(0xA0, 0x11);
+    outb(0x21, 0x20);
+    outb(0xA1, 0x28);
+    outb(0x21, 0x04);
+    outb(0xA1, 0x02);
+    outb(0x21, 0x01);
+    outb(0xA1, 0x01);
+    outb(0x21, 0x0);
+    outb(0xA1, 0x0);
+
     __idt_setGate( 0, (p_uint32)isr0 , 0x08, 0x8E);
     __idt_setGate( 1, (p_uint32)isr1 , 0x08, 0x8E);
     __idt_setGate( 2, (p_uint32)isr2 , 0x08, 0x8E);
@@ -64,6 +78,23 @@ void idt_init(void)
     __idt_setGate(29, (p_uint32)isr29, 0x08, 0x8E);
     __idt_setGate(30, (p_uint32)isr30, 0x08, 0x8E);
     __idt_setGate(31, (p_uint32)isr31, 0x08, 0x8E);
+
+    __idt_setGate(32, (p_uint32)irq0, 0x08, 0x8E);
+    __idt_setGate(33, (p_uint32)irq1, 0x08, 0x8E);
+    __idt_setGate(34, (p_uint32)irq2, 0x08, 0x8E);
+    __idt_setGate(35, (p_uint32)irq3, 0x08, 0x8E);
+    __idt_setGate(36, (p_uint32)irq4, 0x08, 0x8E);
+    __idt_setGate(37, (p_uint32)irq5, 0x08, 0x8E);
+    __idt_setGate(38, (p_uint32)irq6, 0x08, 0x8E);
+    __idt_setGate(39, (p_uint32)irq7, 0x08, 0x8E);
+    __idt_setGate(40, (p_uint32)irq8, 0x08, 0x8E);
+    __idt_setGate(41, (p_uint32)irq9, 0x08, 0x8E);
+    __idt_setGate(42, (p_uint32)irq10, 0x08, 0x8E);
+    __idt_setGate(43, (p_uint32)irq11, 0x08, 0x8E);
+    __idt_setGate(44, (p_uint32)irq12, 0x08, 0x8E);
+    __idt_setGate(45, (p_uint32)irq13, 0x08, 0x8E);
+    __idt_setGate(46, (p_uint32)irq14, 0x08, 0x8E);
+    __idt_setGate(47, (p_uint32)irq15, 0x08, 0x8E);
 
     a_idt_flush((p_uint32)&idt_ptr);
 }

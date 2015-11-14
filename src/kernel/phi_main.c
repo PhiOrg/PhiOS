@@ -15,14 +15,6 @@ void phi_main(Multiboot *p, p_uint32 init_stack)
     keyboard_init();
     enable_A20();
 
-    vga_putUnsignedNumber(init_stack);
-
-    vga_putChar('\n');
-    vga_putChar('\n');
-    vga_putUnsignedNumber(p->mem_lower);
-    vga_putChar('\n');
-    vga_putUnsignedNumber(p->mem_upper);
-
     return;
 }
 

@@ -152,3 +152,38 @@ void vga_changeForeground(enum vga_color fg)
     foreground = fg;
 }
 
+void vga_putAddress(p_uint32 x, p_uint8 padding, p_uint8 upperCase)
+{
+    char digits[] = "0123456789ABCDEF";
+    char result[10], t;
+    p_uint8 i = 0, j;
+
+    if(!upperCase)
+        for(j = 10; j < 16; ++j)
+            digits[j] += 32;
+
+    while(x)
+    {
+        result[i++] = digits[x % 16];
+        x /= 16;
+    }
+
+    if(padding)
+        for(; i < 8; ++i) result[i] = '0';
+    else
+        if(i == 0) result[i++] = '0';
+
+    result[i++] = 'x';
+    result[i++] = '0';
+
+    for(j = 0, --i; j < i; ++j, --i)
+    {
+        t = result[i];
+        result[i] = result[j];
+        result[j] = t;
+    }
+
+    for (i = 0; i < 10; i++)
+        vga_putChar(result[i]);
+}
+

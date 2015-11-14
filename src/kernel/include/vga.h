@@ -37,5 +37,7 @@ void vga_changeBackground(enum vga_color);
 
 void vga_changeForeground(enum vga_color);
 
+void vga_putAddress(p_cuint32 x, p_cuint8 padding, p_cuint8 upperCase);
+
 #endif
 

@@ -69,6 +69,10 @@ void vga_clearScreen(void)
     for (p_uint16 i = 0; i < MAX_ROWS; i++)
         for (p_uint16 j = 0; j < MAX_COLUMNS; j++)
             vga_videoMemory[k++] = __vga_getColorCode() << 8;
+
+    row = 0;
+    column = 0;
+    __vga_moveCursor();
 }
 
 void vga_putChar(const char ch)
@@ -118,20 +122,24 @@ void vga_putSignedNumber(p_s32int number)
     if (number < 0)
         vga_putChar('-');
 
-    do
-    {
-        vga_putChar(number % 10 + '0');
-        number /= 10;
-    } while (number);
+    p_u32int num = -number;
+    vga_putUnsignedNumber(num);
 }
 
 void vga_putUnsignedNumber(p_u32int number)
 {
+    p_s8int i = 0;
+    char str[20];
+
     do
     {
-        vga_putChar(number % 10 + '0');
+        str[i++] = number % 10 + '0';
         number /= 10;
     } while (number);
+
+    i--;
+    while (i >= 0)
+        vga_putChar(str[i--]);
 }
 
 void vga_changeBackground(enum vga_color bg)

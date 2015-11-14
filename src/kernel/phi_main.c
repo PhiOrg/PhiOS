@@ -1,18 +1,18 @@
 #include <vga.h>
 #include <idt.h>
 #include <gdt.h>
+#include <keyboard.h>
+
+extern void enable_A20();
 
 void phi_main(void)
 {
-        const char *a = "hello\n";
-
         vga_clearScreen();
-        vga_putString(a);
 
         idt_init();
         gdt_init();
-        asm volatile ("int $0x3");
-        asm volatile ("int $0x4");
+        keyboard_init();
+        enable_A20();
 
         return;
 }

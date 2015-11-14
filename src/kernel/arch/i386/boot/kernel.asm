@@ -37,7 +37,6 @@ _start:
 
     call phi_main
 
-    cli
 .hang:
     hlt
     jmp .hang ; stop the processor executing whatever rubbish is in the

@@ -112,7 +112,7 @@ void vga_putString(const char *str)
     if (str == 0)
         return;
 
-    p_uint64 i = 0;
+    p_uint32 i = 0;
     while (str[i])
         vga_putChar(str[i++]);
 }

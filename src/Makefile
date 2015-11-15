@@ -13,11 +13,12 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/arch/i386/interrupts/a_gdt.o \
        kernel/arch/i386/interrupts/a_idt.o \
        kernel/arch/i386/interrupts/a_interrupt.o \
-       libc/memcpy.o
+       libc/phimem/phimem.o
 
 myApp:
 	@echo "Compiling libc"
-	cd libc; make
+	cd libc/phimem; make
+	cd libc/phistr; make
 	@echo "\nCompiling kernel"
 	cd kernel; make
 	cd kernel/arch/i386; make
@@ -31,7 +32,8 @@ myApp:
 	grub-mkrescue -o PhiOS.iso ../isodir
 
 clean:
-	cd libc; make clean
+	cd libc/phimem; make clean
+	cd libc/phistr; make clean
 	cd kernel; make clean
 	cd kernel/arch/i386; make clean
 	cd kernel/vga; make clean

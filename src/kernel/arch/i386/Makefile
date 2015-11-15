@@ -1,5 +1,5 @@
 CFLAGS = -std=gnu11 -c -DPhiOS32 -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector
-INCLUDE = -Iinclude -I../../libc/include
+INCLUDE = -Iinclude -I../../libc/include -I../../PhiAPI/include
 AFLAGS = -f elf32
 
 all: a20.o phi_main.o

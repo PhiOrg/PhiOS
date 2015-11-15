@@ -1,5 +1,5 @@
 #include <vga.h>
-#include <memcpy.h>
+#include <phimem.h>
 
 #ifdef PhiArchi386
 #include <common.h>
@@ -40,9 +40,9 @@ static void __vga_scroll(void)
 {
     row--;
     for (p_uint8 i = 1; i < MAX_ROWS; i++)
-        libc_memcpy((char*)(vga_videoMemory + i * MAX_COLUMNS),
-                    (char*)(vga_videoMemory + (i - 1) * MAX_COLUMNS),
-                    2 * MAX_COLUMNS);
+        phimem_cpy((char*)(vga_videoMemory + i * MAX_COLUMNS),
+                   (char*)(vga_videoMemory + (i - 1) * MAX_COLUMNS),
+                   2 * MAX_COLUMNS);
 
     __vga_clearLine();
 }

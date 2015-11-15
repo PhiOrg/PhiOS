@@ -1,8 +1,11 @@
 #include <vga.h>
-#include <idt.h>
-#include <gdt.h>
 #include <keyboard.h>
 #include <multiboot.h>
+
+#ifdef PhiArchi386
+#include <idt.h>
+#include <gdt.h>
+#endif
 
 extern void enable_A20();
 

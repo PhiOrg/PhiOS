@@ -1,1 +1,1 @@
-qemu-system-i386 -kernel ../bin/kernel.elf
+qemu-system-i386 PhiOS.iso

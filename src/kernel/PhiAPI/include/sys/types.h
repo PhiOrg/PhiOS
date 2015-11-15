@@ -48,9 +48,9 @@ typedef char                        p_bool;
  * __udivdi3 and __divdi3
  */
 #ifdef PhiOS32
-typedef p_uint32 p_size_t
+typedef p_uint32 p_size_t;
 #else
-typedef p_uint64 p_size_t
+typedef p_uint64 p_size_t;
 #endif
 
 #endif

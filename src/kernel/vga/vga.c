@@ -1,6 +1,9 @@
 #include <vga.h>
 #include <memcpy.h>
+
+#ifdef PhiArchi386
 #include <common.h>
+#endif
 
 #define MAX_ROWS 25
 #define MAX_COLUMNS 80

@@ -1,6 +1,6 @@
 CFLAGS = -std=gnu11 -c -DPhiOS32 -m32 -nostdlib -nostdinc -fno-builtin -fno-stack-protector
 AFLAGS = -f elf32
-INCLUDE = -I../../../libc/include -I../include -I../../../PhiAPI/include
+INCLUDE = -I../../../include -I../include -I../../../../PhiAPI/include -I../../../../lib/include
 
 all: gdt.o idt.o isr.o irq.o interrupts.o a_gdt.o a_idt.o a_interrupt.o
 

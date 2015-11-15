@@ -1,8 +1,11 @@
+#include <keyboard_key.h>
 #include <keyboard.h>
+
+#ifdef PhiArchi386
 #include <common.h>
 #include <vga.h>
 #include <irq.h>
-#include <keyboard_key.h>
+#endif
 
 unsigned char keyboardMap[] = {
                       0, ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',

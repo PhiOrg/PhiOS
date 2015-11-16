@@ -3,8 +3,8 @@ INCLUDE = -I../include -I../../kernel/arch/i386/include -I../../PhiAPI/include
 
 all: phistr.o
 
-phistr.o:
-	gcc $(CFLAGS) phistr.c $(INCLUDE)
+phistr.o: phistr.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 clean:
 	-rm *.o

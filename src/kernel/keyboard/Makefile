@@ -3,8 +3,8 @@ INCLUDE = -I../include -I../../libc/include -I../../PhiAPI/include -I../arch/i38
 
 all: keyboard.o
 
-keyboard.o:
-	gcc $(CFLAGS) keyboard.c $(INCLUDE)
+keyboard.o: keyboard.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 clean:
 	-rm *.o

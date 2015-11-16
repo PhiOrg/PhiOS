@@ -3,8 +3,8 @@ INCLUDE = -Iinclude -I../libc/include -I../PhiAPI/include -Iarch/i386/include
 
 all: phi_main.o
 
-phi_main.o:
-	gcc $(CFLAGS) phi_main.c $(INCLUDE)
+phi_main.o: phi_main.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 clean:
 	-rm *.o

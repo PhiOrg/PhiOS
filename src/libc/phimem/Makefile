@@ -3,8 +3,8 @@ INCLUDE = -I../include -I../../kernel/arch/i386/include -I../../PhiAPI/include
 
 all: phimem.o
 
-phimem.o:
-	gcc $(CFLAGS) phimem.c $(INCLUDE)
+phimem.o: phimem.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 clean:
 	-rm *.o

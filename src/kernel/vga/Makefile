@@ -3,8 +3,8 @@ INCLUDE = -I../include -I../../libc/include -I../../PhiAPI/include -I../arch/i38
 
 all: vga.o
 
-vga.o:
-	gcc $(CFLAGS) vga.c $(INCLUDE)
+vga.o: vga.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 clean:
 	-rm *.o

@@ -4,29 +4,29 @@ INCLUDE = -I../../../include -I../include -I../../../../PhiAPI/include -I../../.
 
 all: gdt.o idt.o isr.o irq.o interrupts.o a_gdt.o a_idt.o a_interrupt.o
 
-gdt.o:
-	gcc $(CFLAGS) gdt.c $(INCLUDE)
+gdt.o: gdt.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
-idt.o:
-	gcc $(CFLAGS) idt.c $(INCLUDE)
+idt.o: idt.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
-isr.o:
-	gcc $(CFLAGS) isr.c $(INCLUDE)
+isr.o: isr.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
-irq.o:
-	gcc $(CFLAGS) irq.c $(INCLUDE)
+irq.o: irq.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
-interrupts.o:
-	gcc $(CFLAGS) interrupts.c $(INCLUDE)
+interrupts.o: interrupts.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
-a_gdt.o:
-	nasm $(AFLAGS) a_gdt.asm
+a_gdt.o: a_gdt.asm
+	nasm $(AFLAGS) -o $@ $<
 
-a_idt.o:
-	nasm $(AFLAGS) a_idt.asm
+a_idt.o: a_idt.asm
+	nasm $(AFLAGS) -o $@ $<
 
-a_interrupt.o:
-	nasm $(AFLAGS) a_interrupt.asm
+a_interrupt.o: a_interrupt.asm
+	nasm $(AFLAGS) -o $@ $<
 
 clean:
 	-rm *.o

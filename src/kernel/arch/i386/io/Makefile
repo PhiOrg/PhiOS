@@ -3,8 +3,8 @@ INCLUDE = -I../../../include -I../include -I../../../../libc/include -I../../../
 
 all: common.o
 
-common.o:
-	gcc $(CFLAGS) common.c $(INCLUDE)
+common.o: common.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 clean:
 	-rm *.o

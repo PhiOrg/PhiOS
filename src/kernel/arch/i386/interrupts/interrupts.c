@@ -5,9 +5,9 @@
 
 extern isrFunction interruptHandlers[];
 
-static void __interrupts_memset(char *ptr, p_cuint32 size)
+static void __interrupts_memset(char *ptr, p_size_t size)
 {
-    for (p_uint32 i = 0; i < size; i++)
+    for (p_size_t i = 0; i < size; i++)
         ptr[i] = 0;
 }
 

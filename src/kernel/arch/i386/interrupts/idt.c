@@ -21,9 +21,9 @@ static void __idt_setGate(p_uint8 num, p_uint32 base, p_uint16 sel, p_uint8 flag
     idt_entries[num].flags   = flags /* | 0x60 */;
 }
 
-static void __idt_memset(char *ptr, p_uint32 size)
+static void __idt_memset(char *ptr, p_size_t size)
 {
-    for (p_uint32 i = 0; i < size; i++)
+    for (p_size_t i = 0; i < size; i++)
         ptr[i] = 0;
 }
 

@@ -13,17 +13,23 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/arch/i386/interrupts/a_gdt.o \
        kernel/arch/i386/interrupts/a_idt.o \
        kernel/arch/i386/interrupts/a_interrupt.o \
-       libc/phimem/phimem.o
+       kernel/memory/pmm.o \
+       kernel/memory/kheap.o \
+       libc/phimem/phimem.o \
+       libc/phistr/phistr.o \
+       lib/phiio/phiio.o
 
 myApp:
 	@echo "Compiling libc"
 	cd libc/phimem; make
 	cd libc/phistr; make
+	cd libc/phiio; make
 	@echo "\nCompiling kernel"
 	cd kernel; make
 	cd kernel/arch/i386; make
 	cd kernel/vga; make
 	cd kernel/keyboard; make
+	cd kernel/memory; make
 	cd kernel/arch/i386/io; make
 	cd kernel/arch/i386/interrupts; make
 	cd kernel/arch/i386/boot; make
@@ -34,10 +40,12 @@ myApp:
 clean:
 	cd libc/phimem; make clean
 	cd libc/phistr; make clean
+	cd libc/phiio; make clean
 	cd kernel; make clean
 	cd kernel/arch/i386; make clean
 	cd kernel/vga; make clean
 	cd kernel/keyboard; make clean
+	cd kernel/memory; make clean
 	cd kernel/arch/i386/io; make clean
 	cd kernel/arch/i386/interrupts; make clean
 	cd kernel/arch/i386/boot; make clean

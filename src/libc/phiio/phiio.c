@@ -1,6 +1,7 @@
 #include <phiio.h>
+#include <vga.h>
 
-void printk(char *str, ...)
+void printk(str) char str[];
 {
 
 }

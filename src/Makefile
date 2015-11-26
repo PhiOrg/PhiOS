@@ -15,9 +15,10 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/arch/i386/interrupts/a_interrupt.o \
        kernel/memory/pmm.o \
        kernel/memory/kheap.o \
+       kernel/memory/bitmap.o \
        libc/phimem/phimem.o \
        libc/phistr/phistr.o \
-       lib/phiio/phiio.o
+#       lib/phiio/phiio.o
 
 myApp:
 	@echo "Compiling libc"

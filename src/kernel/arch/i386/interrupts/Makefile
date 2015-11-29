@@ -2,7 +2,10 @@ CFLAGS = -std=gnu11 -c -DPhiOS32 -m32 -nostdlib -nostdinc -fno-builtin -fno-stac
 AFLAGS = -f elf32
 INCLUDE = -I../../../include -I../include -I../../../../PhiAPI/include -I../../../../lib/include
 
-all: gdt.o idt.o isr.o irq.o interrupts.o a_gdt.o a_idt.o a_interrupt.o
+all: pit.o gdt.o idt.o isr.o irq.o interrupts.o a_gdt.o a_idt.o a_interrupt.o
+
+pit.o: pit.c
+	gcc $(CFLAGS) -o $@ $< $(INCLUDE)
 
 gdt.o: gdt.c
 	gcc $(CFLAGS) -o $@ $< $(INCLUDE)

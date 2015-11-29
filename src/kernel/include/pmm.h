@@ -12,6 +12,7 @@ p_uint32 pmm_getFreeFrame();
 p_sint32 pmm_freeFrame(p_uint32);
 p_uint32 pmm_getFramesNumber();
 p_uint32 pmm_getFreeFramesNumber();
+void pmm_init(p_uint32);
 
 #endif
 

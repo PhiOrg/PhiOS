@@ -5,6 +5,7 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/keyboard/keyboard.o \
        kernel/arch/i386/io/common.o \
        kernel/arch/i386/a20.o \
+       kernel/arch/i386/interrupts/pit.o \
        kernel/arch/i386/interrupts/gdt.o \
        kernel/arch/i386/interrupts/idt.o \
        kernel/arch/i386/interrupts/irq.o \

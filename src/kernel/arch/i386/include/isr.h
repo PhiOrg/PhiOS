@@ -2,7 +2,7 @@
  *  isr.h -- interrupt service routines
  */
 #ifndef PhiOS_isr
-#define PhiOs_isr
+#define PhiOS_isr
 
 #include <sys/types.h>
 

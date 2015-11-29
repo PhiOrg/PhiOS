@@ -7,6 +7,7 @@
 extern p_uint32 kernel_end;
 
 PageDirectory *vmm_kernelDirectory, *vmm_currentDirectory;
+p_uint32 vmm_enabledPaging = 0;
 
 static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make,
                                p_uint32 flags, PageDirectory *pg)
@@ -80,6 +81,16 @@ void vmm_init()
     vmm_enablePaging();
 }
 
+void vmm_disablePaging()
+{
+    p_uint32 cr0;
+    asm volatile("mov %%cr0, %0" : "=r"(cr0));
+    cr0 &= 0x7FFFFFFF;
+    asm volatile("mov %0, %%cr0" :: "r"(cr0));
+
+    vmm_enabledPaging = 0;
+}
+
 void vmm_pageFault(Registers regs)
 {
     p_uint32 cr2;
@@ -87,6 +98,8 @@ void vmm_pageFault(Registers regs)
     vga_putString("Page fault: ");
     vga_putAddress(cr2, 1, 1);
     vga_putChar('\n');
+
+    vmm_disablePaging();
 }
 
 void vmm_switchPageDirectory(PageDirectory *pg)
@@ -101,5 +114,7 @@ void vmm_enablePaging()
     asm volatile("mov %%cr0, %0" : "=r"(cr0));
     cr0 |= 0x80000000;
     asm volatile("mov %0, %%cr0" :: "r"(cr0));
+
+    vmm_enabledPaging = 1;
 }
 

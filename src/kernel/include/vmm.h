@@ -36,6 +36,7 @@ void vmm_enablePaging();
 void vmm_allocPage(p_uint32, p_uint32, PageDirectory*);
 void vmm_freePage(p_uint32, PageDirectory*);
 void vmm_allocArea(p_uint32, p_uint32, p_uint32, PageDirectory*);
+void vmm_disablePaging();
 
 #endif
 

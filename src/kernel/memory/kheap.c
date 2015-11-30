@@ -46,6 +46,9 @@ p_size_t kheap_kmalloc(p_size_t size)
 
 p_size_t kheap_mallocPageTable(p_size_t size, p_size_t *phys)
 {
+    if (kheap_mallocPageTable_placementAddress == kheap_mallocPageTable_maxAddress)
+        return 0x0;
+
     p_size_t tmp = kheap_mallocPageTable_placementAddress;
     *phys = kheap_mallocPageTable_placementAddress;
     kheap_mallocPageTable_placementAddress += size;

@@ -23,8 +23,7 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make,
         if (make)
         {
             p_uint32 phys;
-            pg->tables[tableIndex] = (PageTable*) kheap_kmalloc_ap(sizeof(PageTable),
-                                                                   &phys);
+            pg->tables[tableIndex] = (PageTable*) kheap_mallocPageTable(sizeof(PageTable), &phys);
             phimem_set(pg->tables[tableIndex], sizeof(PageTable));
             pg->physicalTables[tableIndex] = phys | flags;
 
@@ -73,6 +72,7 @@ void vmm_init()
     phimem_set(vmm_kernelDirectory, sizeof(PageDirectory));
     vmm_currentDirectory = vmm_kernelDirectory;
 
+    kheap_mallocPageTable_init(sizeof(PageTable));
     vmm_allocArea(0x0, ((p_uint32) &kernel_end) + 0x100000,
                   PAGE_READ_WRITE | PAGE_PRESENT, vmm_kernelDirectory);
 

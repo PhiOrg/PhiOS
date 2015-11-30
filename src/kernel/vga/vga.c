@@ -122,7 +122,8 @@ void vga_putString(const char *str)
 
 void vga_putSignedNumber(p_s32int number)
 {
-    if (number < 0) {
+    if (number < 0)
+    {
         vga_putChar('-');
         number = -number;
     }

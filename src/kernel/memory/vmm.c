@@ -33,6 +33,25 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make,
             return 0x0;
 }
 
+p_uint32* vmm_getFreePage(PageDirectory *pg)
+{
+    for (p_uint32 i = 0; i < 1024; i++)
+        if (pg->tables[i])
+        {
+            for (p_uint32 j = 0; j < 1024; j++)
+                if (pg->tables[i]->pages[j] == 0)
+                    return &pg->tables[i]->pages[j];
+        }
+        else
+        {
+            p_uint32 phys;
+            pg->tables[i] = (PageTable*) kheap_mallocPageTable(sizeof(PageTable), &phys);
+            phimem_set(pg->tables[i], sizeof(PageTable));
+
+            return &pg->tables[i]->pages[0];
+        }
+}
+
 void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)
 {
     p_uint32 frameIndex = pmm_getFreeFrame();

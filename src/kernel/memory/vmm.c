@@ -15,7 +15,7 @@ p_uint32 vmm_enabledPaging = 0;
 
 static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *pg)
 {
-    address /= 0x1000;
+    address /= FRAME_SIZE;
     p_uint32 tableIndex = address / MAX_PAGE_TABLES_NUMBER;
 
     if (pg->tables[tableIndex])
@@ -39,7 +39,7 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
 static void __vmm_initKernelDirectory()
 {
     for (p_uint32 i = 0; i < MAX_PAGE_TABLES_NUMBER; i++)
-        __vmm_getPage(i * MAX_PAGES_NUMBER * 4096, 1, vmm_kernelDirectory);
+        __vmm_getPage(i * MAX_PAGES_NUMBER * FRAME_SIZE, p_true, vmm_kernelDirectory);
 }
 
 p_uint32* vmm_getFreePage(PageDirectory *pg)
@@ -70,7 +70,7 @@ void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)
         return;
 
     p_uint32 frameIndex = pmm_getFreeFrame();
-    p_uint32 physicalAddress = frameIndex * 0x1000;
+    p_uint32 physicalAddress = frameIndex * FRAME_SIZE;
     pmm_allocFrame(frameIndex);
 
     *page = physicalAddress | flags;
@@ -78,11 +78,11 @@ void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)
 
 void vmm_freePage(p_uint32 virtualAddress, PageDirectory *pg)
 {
-    p_uint32 pageIndex = (virtualAddress / 0x1000) % MAX_PAGES_NUMBER;
-    p_uint32 tableIndex = (virtualAddress / 0x1000) / MAX_PAGE_TABLES_NUMBER;
+    p_uint32 pageIndex = (virtualAddress / FRAME_SIZE) % MAX_PAGES_NUMBER;
+    p_uint32 tableIndex = (virtualAddress / FRAME_SIZE) / MAX_PAGE_TABLES_NUMBER;
 
     p_uint32 physicalAddress = pg->tables[tableIndex]->pages[pageIndex] & 0xFFFFF000;
-    pmm_freeFrame(physicalAddress / 0x1000);
+    pmm_freeFrame(physicalAddress / FRAME_SIZE);
 
     pg->tables[tableIndex]->pages[pageIndex] = 0x0;
 }
@@ -90,7 +90,7 @@ void vmm_freePage(p_uint32 virtualAddress, PageDirectory *pg)
 void vmm_allocArea(p_uint32 fromVirtualAddress, p_uint32 toVirtualAddress,
                    p_uint32 flags, PageDirectory *pg)
 {
-    for (p_uint32 i = fromVirtualAddress; i < toVirtualAddress; i += 0x1000)
+    for (p_uint32 i = fromVirtualAddress; i < toVirtualAddress; i += FRAME_SIZE)
     {
         vmm_allocPage(i, flags, pg);
     }

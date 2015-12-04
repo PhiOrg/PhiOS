@@ -9,8 +9,9 @@ extern p_uint32 kernel_end;
 PageDirectory *vmm_kernelDirectory, *vmm_currentDirectory;
 p_uint32 vmm_enabledPaging = 0;
 
-static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make,
-                               p_uint32 flags, PageDirectory *pg)
+#define PHYSICAL_TABLES_FLAGS PAGE_PRESENT | PAGE_READ_WRITE | PAGE_USER_MODE
+
+static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *pg)
 {
     address /= 0x1000;
     p_uint32 tableIndex = address / 1024;
@@ -25,7 +26,7 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make,
             p_uint32 phys;
             pg->tables[tableIndex] = (PageTable*) kheap_mallocPageTable(sizeof(PageTable), &phys);
             phimem_set(pg->tables[tableIndex], sizeof(PageTable));
-            pg->physicalTables[tableIndex] = phys | flags;
+            pg->physicalTables[tableIndex] = phys | PHYSICAL_TABLES_FLAGS;
 
             return &pg->tables[tableIndex]->pages[address % 1024];
         }
@@ -47,6 +48,7 @@ p_uint32* vmm_getFreePage(PageDirectory *pg)
             p_uint32 phys;
             pg->tables[i] = (PageTable*) kheap_mallocPageTable(sizeof(PageTable), &phys);
             phimem_set(pg->tables[i], sizeof(PageTable));
+            pg->physicalTables[i] = phys | PHYSICAL_TABLES_FLAGS;
 
             return &pg->tables[i]->pages[0];
         }
@@ -61,7 +63,7 @@ void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)
     p_uint32 pageIndex = (virtualAddress / 0x1000) % 1024;
     p_uint32 tableIndex = (virtualAddress / 0x1000) / 1024;
 
-    p_uint32 *page = __vmm_getPage(virtualAddress, 1, flags, pg);
+    p_uint32 *page = __vmm_getPage(virtualAddress, 1, pg);
     *page = physicalAddress | flags;
 }
 

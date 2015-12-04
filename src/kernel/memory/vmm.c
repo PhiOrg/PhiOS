@@ -79,7 +79,7 @@ void vmm_freePage(p_uint32 virtualAddress, PageDirectory *pg)
     p_uint32 pageIndex = (virtualAddress / FRAME_SIZE) % MAX_PAGES_IN_TABLE;
     p_uint32 tableIndex = (virtualAddress / FRAME_SIZE) / MAX_PAGE_TABLES;
 
-    p_uint32 physicalAddress = pg->tables[tableIndex]->pages[pageIndex] & 0xFFFFF000;
+    p_uint32 physicalAddress = pg->tables[tableIndex]->pages[pageIndex] & MAGIC_ALIGN;
     pmm_freeFrame(physicalAddress / FRAME_SIZE);
 
     pg->tables[tableIndex]->pages[pageIndex] = 0x0;

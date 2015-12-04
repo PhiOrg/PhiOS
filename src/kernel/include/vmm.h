@@ -6,30 +6,24 @@
 #define PhiOS_vmm
 
 #include <sys/types.h>
+#include <memory/defines.h>
 
 #ifdef PhiArch_i386
 #include <isr.h>
 #endif
 
-#define PAGE_PRESENT 0x1
-#define PAGE_READ_WRITE 0x2
-#define PAGE_USER_MODE 0x4
-
-#define MAX_PAGES_NUMBER 1024
-#define MAX_PAGE_TABLES_NUMBER 1024
-
 // PageTable == 4mb virtual memory
 typedef struct page_table_t
 {
-    p_uint32 pages[MAX_PAGES_NUMBER];
+    p_uint32 pages[MAX_PAGES_IN_TABLE];
 } PageTable;
 
 // PageDirectory == 4gb virtual memory
 typedef struct page_directory_t
 {
-    PageTable *tables[MAX_PAGE_TABLES_NUMBER];        // 1024 pointers to PageTable
-    p_uint32 physicalTables[MAX_PAGE_TABLES_NUMBER];  // physical addresss of the tables
-    p_uint32 physicalAddress;                         // the physical address of physicalTables
+    PageTable *tables[MAX_PAGE_TABLES];        // 1024 pointers to PageTable
+    p_uint32 physicalTables[MAX_PAGE_TABLES];  // physical addresss of the tables
+    p_uint32 physicalAddress;                  // the physical address of physicalTables
 } PageDirectory;
 
 void vmm_init();

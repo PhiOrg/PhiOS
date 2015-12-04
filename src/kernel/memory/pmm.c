@@ -1,6 +1,7 @@
 #include <pmm.h>
 #include <kheap.h>
 #include <bitmap.h>
+#include <memory/defines.h>
 
 p_uint32 pmm_framesNumber, *pmm_frames, pmm_freeFramesNumber;
 

@@ -1,9 +1,9 @@
 #include <keyboard_key.h>
 #include <keyboard.h>
+#include <vga.h>
 
 #ifdef PhiArchi386
 #include <common.h>
-#include <vga.h>
 #include <irq.h>
 #endif
 

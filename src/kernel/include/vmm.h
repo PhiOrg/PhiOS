@@ -15,18 +15,21 @@
 #define PAGE_READ_WRITE 0x2
 #define PAGE_USER_MODE 0x4
 
+#define MAX_PAGES_NUMBER 1024
+#define MAX_PAGE_TABLES_NUMBER 1024
+
 // PageTable == 4mb virtual memory
 typedef struct page_table_t
 {
-    p_uint32 pages[1024];
+    p_uint32 pages[MAX_PAGES_NUMBER];
 } PageTable;
 
 // PageDirectory == 4gb virtual memory
 typedef struct page_directory_t
 {
-    PageTable *tables[1024];        // 1024 pointers to PageTable
-    p_uint32 physicalTables[1024];  // physical addresss of the tables
-    p_uint32 physicalAddress;       // the physical address of physicalTables
+    PageTable *tables[MAX_PAGE_TABLES_NUMBER];        // 1024 pointers to PageTable
+    p_uint32 physicalTables[MAX_PAGE_TABLES_NUMBER];  // physical addresss of the tables
+    p_uint32 physicalAddress;                         // the physical address of physicalTables
 } PageDirectory;
 
 void vmm_init();

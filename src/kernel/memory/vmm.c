@@ -16,11 +16,11 @@ p_uint32 vmm_enabledPaging = 0;
 static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *pg)
 {
     address /= 0x1000;
-    p_uint32 tableIndex = address / 1024;
+    p_uint32 tableIndex = address / MAX_PAGE_TABLES_NUMBER;
 
     if (pg->tables[tableIndex])
     {
-        return &pg->tables[tableIndex]->pages[address % 1024];
+        return &pg->tables[tableIndex]->pages[address % MAX_PAGES_NUMBER];
     }
     else
         if (make)
@@ -30,7 +30,7 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
             phimem_set(pg->tables[tableIndex], sizeof(PageTable));
             pg->physicalTables[tableIndex] = phys | PHYSICAL_TABLES_FLAGS;
 
-            return &pg->tables[tableIndex]->pages[address % 1024];
+            return &pg->tables[tableIndex]->pages[address % MAX_PAGES_NUMBER];
         }
         else
             return 0x0;
@@ -38,16 +38,16 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
 
 static void __vmm_initKernelDirectory()
 {
-    for (p_uint32 i = 0; i < 1024; i++)
-        __vmm_getPage(i * 1024 * 4096, 1, vmm_kernelDirectory);
+    for (p_uint32 i = 0; i < MAX_PAGE_TABLES_NUMBER; i++)
+        __vmm_getPage(i * MAX_PAGES_NUMBER * 4096, 1, vmm_kernelDirectory);
 }
 
 p_uint32* vmm_getFreePage(PageDirectory *pg)
 {
-    for (p_uint32 i = 0; i < 1024; i++)
+    for (p_uint32 i = 0; i < MAX_PAGE_TABLES_NUMBER; i++)
         if (pg->tables[i])
         {
-            for (p_uint32 j = 0; j < 1024; j++)
+            for (p_uint32 j = 0; j < MAX_PAGES_NUMBER; j++)
                 if (pg->tables[i]->pages[j] == 0)
                     return &pg->tables[i]->pages[j];
         }
@@ -78,8 +78,8 @@ void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)
 
 void vmm_freePage(p_uint32 virtualAddress, PageDirectory *pg)
 {
-    p_uint32 pageIndex = (virtualAddress / 0x1000) % 1024;
-    p_uint32 tableIndex = (virtualAddress / 0x1000) / 1024;
+    p_uint32 pageIndex = (virtualAddress / 0x1000) % MAX_PAGES_NUMBER;
+    p_uint32 tableIndex = (virtualAddress / 0x1000) / MAX_PAGE_TABLES_NUMBER;
 
     p_uint32 physicalAddress = pg->tables[tableIndex]->pages[pageIndex] & 0xFFFFF000;
     pmm_freeFrame(physicalAddress / 0x1000);

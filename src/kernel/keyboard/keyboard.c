@@ -2,7 +2,7 @@
 #include <keyboard.h>
 #include <vga.h>
 
-#ifdef PhiArchi386
+#ifdef PhiArch_i386
 #include <common.h>
 #include <irq.h>
 #endif

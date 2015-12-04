@@ -1,7 +1,7 @@
 #include <vga.h>
 #include <phimem.h>
 
-#ifdef PhiArchi386
+#ifdef PhiArch_i386
 #include <common.h>
 #endif
 

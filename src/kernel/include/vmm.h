@@ -7,7 +7,7 @@
 
 #include <sys/types.h>
 
-#ifdef PhiArchi386
+#ifdef PhiArch_i386
 #include <isr.h>
 #endif
 

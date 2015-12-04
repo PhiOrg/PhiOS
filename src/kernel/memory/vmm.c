@@ -5,6 +5,8 @@
 #include <pmm.h>
 
 extern p_uint32 kernel_end;
+extern p_size_t kheap_placementAddress;
+extern p_uint32 pmm_framesNumber, pmm_freeFramesNumber;
 
 PageDirectory *vmm_kernelDirectory, *vmm_currentDirectory;
 p_uint32 vmm_enabledPaging = 0;
@@ -34,6 +36,12 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
             return 0x0;
 }
 
+static void __vmm_initKernelDirectory()
+{
+    for (p_uint32 i = 0; i < 1024; i++)
+        __vmm_getPage(i * 1024 * 4096, 1, vmm_kernelDirectory);
+}
+
 p_uint32* vmm_getFreePage(PageDirectory *pg)
 {
     for (p_uint32 i = 0; i < 1024; i++)
@@ -56,14 +64,15 @@ p_uint32* vmm_getFreePage(PageDirectory *pg)
 
 void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)
 {
+    p_uint32 *page = __vmm_getPage(virtualAddress, 1, pg);
+
+    if (*page != 0)
+        return;
+
     p_uint32 frameIndex = pmm_getFreeFrame();
     p_uint32 physicalAddress = frameIndex * 0x1000;
     pmm_allocFrame(frameIndex);
 
-    p_uint32 pageIndex = (virtualAddress / 0x1000) % 1024;
-    p_uint32 tableIndex = (virtualAddress / 0x1000) / 1024;
-
-    p_uint32 *page = __vmm_getPage(virtualAddress, 1, pg);
     *page = physicalAddress | flags;
 }
 
@@ -94,8 +103,10 @@ void vmm_init()
     vmm_currentDirectory = vmm_kernelDirectory;
 
     kheap_mallocPageTable_init(sizeof(PageTable));
-    vmm_allocArea(0x0, ((p_uint32) &kernel_end) + 0x100000,
+    vmm_allocArea(0x0, kheap_placementAddress,
                   PAGE_READ_WRITE | PAGE_PRESENT, vmm_kernelDirectory);
+
+    __vmm_initKernelDirectory();
 
     isr_registerInterruptHandler(14, vmm_pageFault);
     vmm_switchPageDirectory(vmm_kernelDirectory);

@@ -1,4 +1,5 @@
 #include <kheap.h>
+#include <memory/defines.h>
 
 extern p_size_t kernel_end;
 p_size_t kheap_placementAddress = (p_size_t) &kernel_end;
@@ -10,7 +11,7 @@ static p_size_t __kheap_kmalloc(p_size_t size, p_uint8 align, p_size_t *phys)
     if (align == 1 && (kheap_placementAddress & 0xFFFFF000))
     {
         kheap_placementAddress &= 0xFFFFF000;
-        kheap_placementAddress += 0x1000;
+        kheap_placementAddress += FRAME_SIZE;
     }
 
     if (phys)
@@ -58,9 +59,9 @@ p_size_t kheap_mallocPageTable(p_size_t size, p_size_t *phys)
 
 void kheap_mallocPageTable_init(p_size_t size)
 {
-    kheap_mallocPageTable_placementAddress = (kheap_placementAddress & 0xFFFFF000) + 0x1000;
+    kheap_mallocPageTable_placementAddress = (kheap_placementAddress & 0xFFFFF000) + FRAME_SIZE;
     kheap_mallocPageTable_maxAddress = kheap_mallocPageTable_placementAddress +
-                                       1024 * size;
+                                       MAX_PAGE_TABLES * size;
     kheap_placementAddress = kheap_mallocPageTable_maxAddress;
 }
 

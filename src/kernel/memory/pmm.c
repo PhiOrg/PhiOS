@@ -2,10 +2,6 @@
 #include <kheap.h>
 #include <bitmap.h>
 
-#define FRAME_SIZE_IN_KB 4
-#define FRAME_SIZE 4096
-#define BITS 32
-
 p_uint32 pmm_framesNumber, *pmm_frames, pmm_freeFramesNumber;
 
 void pmm_init(p_uint32 ramSize)

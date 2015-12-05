@@ -28,3 +28,8 @@ p_uint16 inw(p_cuint16 port)
     return ret;
 }
 
+void outw(p_cuint16 port, p_cuint16 value)
+{
+    asm volatile ("outw %1, %0" : : "dN" (port), "a" (value));
+}
+

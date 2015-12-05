@@ -19,3 +19,13 @@ void interrupts_init(void)
     __interrupts_memset((char*)&interruptHandlers, sizeof(isrFunction) * 256);
 }
 
+void interrupts_cli(void)
+{
+    asm volatile("cli");
+}
+
+void interrupts_sti(void)
+{
+    asm volatile("sti");
+}
+

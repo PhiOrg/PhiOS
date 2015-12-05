@@ -19,6 +19,7 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/memory/bitmap.o \
        kernel/memory/vmm.o \
        kernel/system/sys.o \
+       kernel/system/rtc.o \
        libc/phimem/phimem.o \
        libc/phistr/phistr.o \
        libc/phiio/phiio.o

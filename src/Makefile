@@ -18,6 +18,7 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/memory/kheap.o \
        kernel/memory/bitmap.o \
        kernel/memory/vmm.o \
+       kernel/system/sys.o \
        libc/phimem/phimem.o \
        libc/phistr/phistr.o \
        libc/phiio/phiio.o
@@ -33,6 +34,7 @@ myApp:
 	cd kernel/vga; make
 	cd kernel/keyboard; make
 	cd kernel/memory; make
+	cd kernel/system; make
 	cd kernel/arch/i386/io; make
 	cd kernel/arch/i386/interrupts; make
 	cd kernel/arch/i386/boot; make
@@ -49,6 +51,7 @@ clean:
 	cd kernel/vga; make clean
 	cd kernel/keyboard; make clean
 	cd kernel/memory; make clean
+	cd kernel/system; make clean
 	cd kernel/arch/i386/io; make clean
 	cd kernel/arch/i386/interrupts; make clean
 	cd kernel/arch/i386/boot; make clean

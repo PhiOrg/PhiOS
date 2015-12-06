@@ -40,7 +40,7 @@ void vmm_freeArea(p_uint32, p_uint32, PageDirectory*);
  *  Search n free page in vmm_kernelDirectory and returns the index of the first
  *  free page.
  */
-p_uint32 vmm_getNFreePage(p_uint32);
+p_uint32 vmm_getNFreePages(p_uint32);
 
 #endif
 

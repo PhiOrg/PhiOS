@@ -41,7 +41,7 @@ static void __vmm_initKernelDirectory()
         __vmm_getPage(i * MAX_PAGES_IN_TABLE * FRAME_SIZE, p_true, vmm_kernelDirectory);
 }
 
-p_uint32 vmm_getNFreePage(p_uint32 n)
+p_uint32 vmm_getNFreePages(p_uint32 n)
 {
     if (pmm_getFreeFramesNumber() < n)
         return 0xFFFFFFFF;

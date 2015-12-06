@@ -3,6 +3,7 @@
 #include <kheap.h>
 #include <vga.h>
 #include <pmm.h>
+#include <phiio.h>
 
 extern p_uint32 kernel_end;
 extern p_size_t kheap_placementAddress;
@@ -58,6 +59,32 @@ p_uint32* vmm_getFreePage(PageDirectory *pg)
 
             return &pg->tables[i]->pages[0];
         }
+}
+
+p_uint32 vmm_getNFreePage(p_uint32 n)
+{
+    if (pmm_getFreeFramesNumber() < n)
+        return 0xFFFFFFFF;
+
+    p_uint32 *p = (p_uint32*) vmm_kernelDirectory->tables[0];
+
+    for (p_uint32 i = 0; i < MAX_PAGES; i++)
+        if (p[i] == 0)
+        {
+            p_uint32 x = n - 1, ret = i;
+            i++;
+
+            while (p[i] == 0 && x != 0)
+            {
+                i++;
+                x--;
+            }
+
+            if (x == 0)
+                return ret;
+        }
+
+    return 0xFFFFFFFF;
 }
 
 void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)

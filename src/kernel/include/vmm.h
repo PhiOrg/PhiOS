@@ -37,5 +37,11 @@ void vmm_disablePaging();
 void vmm_freeArea(p_uint32, p_uint32, PageDirectory*);
 p_uint32* vmm_getFreePage(PageDirectory*);
 
+/**
+ *  Search n free page in vmm_kernelDirectory and returns the index of the first
+ *  free page.
+ */
+p_uint32 vmm_getNFreePage(p_uint32);
+
 #endif
 

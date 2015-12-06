@@ -94,6 +94,13 @@ void vmm_allocArea(p_uint32 fromVirtualAddress, p_uint32 toVirtualAddress,
     }
 }
 
+void vmm_freeArea(p_uint32 fromVirtualAddress, p_uint32 toVirtualAddress,
+                  PageDirectory *pg)
+{
+    for (p_uint32 i = fromVirtualAddress; i < toVirtualAddress; i += FRAME_SIZE)
+        vmm_freePage(i, pg);
+}
+
 void vmm_init()
 {
     vmm_kernelDirectory = (PageDirectory*) kheap_kmalloc_a(sizeof(PageDirectory));

@@ -8,10 +8,13 @@ p_size_t kheap_mallocPageTable_maxAddress;
 
 static p_size_t __kheap_kmalloc(p_size_t size, p_uint8 align, p_size_t *phys)
 {
-    if (align == 1 && (kheap_placementAddress & MAGIC_ALIGN))
+    if (kheap_placementAddress & CHECK_ALIGN)
     {
-        kheap_placementAddress &= MAGIC_ALIGN;
-        kheap_placementAddress += FRAME_SIZE;
+        if (align == 1 && (kheap_placementAddress & MAGIC_ALIGN))
+        {
+            kheap_placementAddress &= MAGIC_ALIGN;
+            kheap_placementAddress += FRAME_SIZE;
+        }
     }
 
     if (phys)
@@ -59,7 +62,12 @@ p_size_t kheap_mallocPageTable(p_size_t size, p_size_t *phys)
 
 void kheap_mallocPageTable_init(p_size_t size)
 {
-    kheap_mallocPageTable_placementAddress = (kheap_placementAddress & MAGIC_ALIGN) + FRAME_SIZE;
+    if (kheap_placementAddress & CHECK_ALIGN)
+        kheap_mallocPageTable_placementAddress = (kheap_placementAddress &
+                                                  MAGIC_ALIGN) + FRAME_SIZE;
+    else
+        kheap_mallocPageTable_placementAddress = kheap_placementAddress;
+
     kheap_mallocPageTable_maxAddress = kheap_mallocPageTable_placementAddress +
                                        MAX_PAGE_TABLES * size;
     kheap_placementAddress = kheap_mallocPageTable_maxAddress;

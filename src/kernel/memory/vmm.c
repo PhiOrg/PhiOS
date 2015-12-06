@@ -41,26 +41,6 @@ static void __vmm_initKernelDirectory()
         __vmm_getPage(i * MAX_PAGES_IN_TABLE * FRAME_SIZE, p_true, vmm_kernelDirectory);
 }
 
-p_uint32* vmm_getFreePage(PageDirectory *pg)
-{
-    for (p_uint32 i = 0; i < MAX_PAGE_TABLES; i++)
-        if (pg->tables[i])
-        {
-            for (p_uint32 j = 0; j < MAX_PAGES_IN_TABLE; j++)
-                if (pg->tables[i]->pages[j] == 0)
-                    return &pg->tables[i]->pages[j];
-        }
-        else
-        {
-            p_uint32 phys;
-            pg->tables[i] = (PageTable*) kheap_mallocPageTable(sizeof(PageTable), &phys);
-            phimem_set(pg->tables[i], sizeof(PageTable));
-            pg->physicalTables[i] = phys | PHYSICAL_TABLES_FLAGS;
-
-            return &pg->tables[i]->pages[0];
-        }
-}
-
 p_uint32 vmm_getNFreePage(p_uint32 n)
 {
     if (pmm_getFreeFramesNumber() < n)

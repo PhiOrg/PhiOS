@@ -14,6 +14,7 @@
 #define FRAME_SIZE_IN_KB        4
 
 #define MAGIC_ALIGN             0xFFFFF000
+#define CHECK_ALIGN             0x00000FFF
 
 #define PHYSICAL_TABLES_FLAGS   PAGE_PRESENT | PAGE_READ_WRITE | PAGE_USER_MODE
 

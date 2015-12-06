@@ -1,6 +1,37 @@
 #include <phiio.h>
 #include <vga.h>
 #include <phistr.h>
+#include <rtc.h>
+
+static void __printk_time(RTC *rtc)
+{
+    if (rtc->days < 10)
+        printk("0%u.", rtc->days);
+    else
+        printk("%u.", rtc->days);
+
+    if (rtc->months < 10)
+        printk("0%u.", rtc->months);
+    else
+        printk("%u.", rtc->months);
+
+    printk("%u ", rtc->centuries * 100 + rtc->years);
+
+    if (rtc->hours < 10)
+        printk("0%u:", rtc->hours);
+    else
+        printk("%u:", rtc->hours);
+
+    if (rtc->minutes < 10)
+        printk("0%u:", rtc->minutes);
+    else
+        printk("%u:", rtc->minutes);
+
+    if (rtc->seconds < 10)
+        printk("0%u", rtc->seconds);
+    else
+        printk("%u", rtc->seconds);
+}
 
 void printk(str) char str[];
 {
@@ -17,7 +48,7 @@ void printk(str) char str[];
     for (p_uint32 i = 1; i < strlen; i++)
     {
         if (str[i - 1] == '%' && (str[i] == 'p' || str[i] == 's' ||
-            str[i] == 'c' || str[i] == 'd' || str[i] == 'u'))
+            str[i] == 'c' || str[i] == 'd' || str[i] == 'u' || str[i] == 't'))
         {
             switch (str[i])
             {
@@ -41,6 +72,10 @@ void printk(str) char str[];
                     vga_putAddress(*p, 1, 1);
                     p++;
                     break;
+                case 't':
+                    __printk_time(*p);
+                    p++;
+                    break;
             }
             i++;
         }
@@ -55,7 +90,8 @@ void printk(str) char str[];
     else
     {
         p_uint32 s = strlen - 1;
-        if (str[s] != 'p' && str[s] != 'c' && str[s] != 'd' && str[s] != 'u')
+        if (str[s] != 'p' && str[s] != 'c' && str[s] != 'd' && str[s] != 'u' &&
+            str[s] != 's' && str[s] != 't')
             vga_putChar(str[s]);
     }
 

@@ -3,7 +3,7 @@
 #include <irq.h>
 #include <isr.h>
 
-void __pit_handler(Registers regs)
+static void __pit_handler(Registers regs)
 {
 }
 

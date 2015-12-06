@@ -19,7 +19,7 @@ RTC *rtc = P_NULL;
 #define YEARS_KEY       0x09
 #define CENTURIES_KEY   0x32
 
-p_uint8 __rtc_checkIfUpdateIsInProgress()
+static p_uint8 __rtc_checkIfUpdateIsInProgress()
 {
     interrupts_cli();
 
@@ -31,7 +31,7 @@ p_uint8 __rtc_checkIfUpdateIsInProgress()
     return ret;
 }
 
-p_uint8 __rtc_getRegisterValue(p_uint8 reg)
+static p_uint8 __rtc_getRegisterValue(p_uint8 reg)
 {
     interrupts_cli();
 

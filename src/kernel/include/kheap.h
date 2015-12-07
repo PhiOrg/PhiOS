@@ -26,8 +26,5 @@ p_size_t kheap_kmalloc_ap(p_size_t size, p_size_t *phys);
  */
 p_size_t kheap_kmalloc(p_size_t size);
 
-void kheap_mallocPageTable_init(p_size_t);
-p_size_t kheap_mallocPageTable(p_size_t, p_size_t*);
-
 #endif
 

@@ -21,24 +21,19 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
     {
         return &pg->tables[tableIndex]->pages[address % MAX_PAGES_IN_TABLE];
     }
-    else
-        if (make)
-        {
-            p_uint32 phys;
-            pg->tables[tableIndex] = (PageTable*) kheap_mallocPageTable(sizeof(PageTable), &phys);
-            phimem_set(pg->tables[tableIndex], sizeof(PageTable));
-            pg->physicalTables[tableIndex] = phys | PHYSICAL_TABLES_FLAGS;
 
-            return &pg->tables[tableIndex]->pages[address % MAX_PAGES_IN_TABLE];
-        }
-        else
-            return 0x0;
+    return 0x0;
 }
 
 static void __vmm_initKernelDirectory()
 {
+    p_uint32 phys;
     for (p_uint32 i = 0; i < MAX_PAGE_TABLES; i++)
-        __vmm_getPage(i * MAX_PAGES_IN_TABLE * FRAME_SIZE, p_true, vmm_kernelDirectory);
+    {
+        vmm_kernelDirectory->tables[i] = (PageTable*) kheap_kmalloc_ap(sizeof(PageTable), &phys);
+        phimem_set(vmm_kernelDirectory->tables[i], sizeof(PageTable));
+        vmm_kernelDirectory->physicalTables[i] = phys | PHYSICAL_TABLES_FLAGS;
+    }
 }
 
 p_uint32 vmm_getNFreePages(p_uint32 n)
@@ -96,9 +91,7 @@ void vmm_allocArea(p_uint32 fromVirtualAddress, p_uint32 toVirtualAddress,
                    p_uint32 flags, PageDirectory *pg)
 {
     for (p_uint32 i = fromVirtualAddress; i < toVirtualAddress; i += FRAME_SIZE)
-    {
         vmm_allocPage(i, flags, pg);
-    }
 }
 
 void vmm_freeArea(p_uint32 fromVirtualAddress, p_uint32 toVirtualAddress,
@@ -112,13 +105,10 @@ void vmm_init()
 {
     vmm_kernelDirectory = (PageDirectory*) kheap_kmalloc_a(sizeof(PageDirectory));
     phimem_set(vmm_kernelDirectory, sizeof(PageDirectory));
-    vmm_currentDirectory = vmm_kernelDirectory;
+    __vmm_initKernelDirectory();
 
-    kheap_mallocPageTable_init(sizeof(PageTable));
     vmm_allocArea(0x0, kheap_placementAddress,
                   PAGE_READ_WRITE | PAGE_PRESENT, vmm_kernelDirectory);
-
-    __vmm_initKernelDirectory();
 
     isr_registerInterruptHandler(14, vmm_pageFault);
     vmm_switchPageDirectory(vmm_kernelDirectory);

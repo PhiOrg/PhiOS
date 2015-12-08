@@ -36,27 +36,27 @@ static void __vmm_initKernelDirectory()
     }
 }
 
-p_uint32 vmm_getNFreePages(p_uint32 n)
+p_uint32 vmm_getNFreePages(p_uint32 size)
 {
-    if (pmm_getFreeFramesNumber() < n)
+    if (pmm_getFreeFramesNumber() < size)
         return 0xFFFFFFFF;
 
-    p_uint32 *p = (p_uint32*) vmm_kernelDirectory->tables[0];
+    p_uint32 *pointer = (p_uint32*) vmm_kernelDirectory->tables[0];
 
-    for (p_uint32 i = 0; i < MAX_PAGES; i++)
-        if (p[i] == 0)
+    for (p_uint32 index = 0; index < MAX_PAGES; index++)
+        if (pointer[index] == 0)
         {
-            p_uint32 x = n - 1, ret = i;
-            i++;
+            p_uint32 __size = size - 1, __index = index;
+            index++;
 
-            while (p[i] == 0 && x != 0)
+            while (pointer[index] == 0 && __size != 0)
             {
-                i++;
-                x--;
+                index++;
+                __size--;
             }
 
-            if (x == 0)
-                return ret;
+            if (__size == 0)
+                return __index;
         }
 
     return 0xFFFFFFFF;

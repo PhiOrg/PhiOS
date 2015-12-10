@@ -18,5 +18,12 @@
 
 #define PHYSICAL_TABLES_FLAGS   PAGE_PRESENT | PAGE_READ_WRITE | PAGE_USER_MODE
 
+
+
+/*
+ * Errors codes.
+ */
+#define ALLOC_ERROR 0xFFFFFFFF
+
 #endif
 

@@ -18,6 +18,7 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/memory/kheap.o \
        kernel/memory/bitmap.o \
        kernel/memory/vmm.o \
+       kernel/memory/heap.o \
        kernel/system/sys.o \
        kernel/system/rtc.o \
        libc/phimem/phimem.o \

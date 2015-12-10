@@ -22,7 +22,7 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
         return &pg->tables[tableIndex]->pages[address % MAX_PAGES_IN_TABLE];
     }
 
-    return 0x0;
+    return P_NULL;
 }
 
 static void __vmm_initKernelDirectory()
@@ -39,7 +39,7 @@ static void __vmm_initKernelDirectory()
 p_uint32 vmm_getNFreePages(p_uint32 size)
 {
     if (pmm_getFreeFramesNumber() < size)
-        return 0xFFFFFFFF;
+        return ALLOC_ERROR;
 
     p_uint32 *pointer = (p_uint32*) vmm_kernelDirectory->tables[0];
 
@@ -59,7 +59,7 @@ p_uint32 vmm_getNFreePages(p_uint32 size)
                 return __index;
         }
 
-    return 0xFFFFFFFF;
+    return ALLOC_ERROR;
 }
 
 void vmm_allocPage(p_uint32 virtualAddress, p_uint32 flags, PageDirectory *pg)

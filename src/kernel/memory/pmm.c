@@ -34,13 +34,13 @@ p_sint32 pmm_allocFrame(p_uint32 index)
 p_uint32 pmm_getFreeFrame()
 {
     if (pmm_freeFramesNumber == 0)
-        return 0xFFFFFFFF;
+        return ALLOC_ERROR;
 
     for (p_uint32 i = 0; i < pmm_framesNumber; i++)
         if (!bitmap_testBit(pmm_frames[i / BITS], BITS - 1 - i % BITS))
             return i;
 
-    return 0xFFFFFFFF;
+    return ALLOC_ERROR;
 }
 
 p_sint32 pmm_freeFrame(p_uint32 index)

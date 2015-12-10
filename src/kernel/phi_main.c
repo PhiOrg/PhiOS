@@ -5,15 +5,23 @@
 #include <bitmap.h>
 #include <phiio.h>
 #include <vmm.h>
+#include <rtc.h>
+#include <heap.h>
 
 #ifdef PhiArch_i386
 #include <idt.h>
 #include <gdt.h>
 #include <pit.h>
+#include <common.h>
 #endif
 
-extern PageDirectory *vmm_kernelDirectory;
+extern void enable_A20();
 
+extern PageDirectory *vmm_kernelDirectory;
+extern p_size_t kheap_placementAddress;
+extern p_size_t kernel_end;
+
+int v[1024];
 void phi_main(Multiboot *p, p_uint32 init_stack)
 {
     vga_clearScreen();
@@ -23,19 +31,19 @@ void phi_main(Multiboot *p, p_uint32 init_stack)
     keyboard_init();
     enable_A20();
 
+    rtc_init();
+
     pmm_init(p->mem_lower + p->mem_upper);
     vmm_init();
     pit_init(50);
 
-    vmm_allocPage(0xA0001000, 1, vmm_kernelDirectory);
-    vmm_allocPage(0xC0001000, 1, vmm_kernelDirectory);
-    vmm_allocPage(0xF0001000, 1, vmm_kernelDirectory);
-    vmm_allocPage(0xB0001000, 1, vmm_kernelDirectory);
-    vmm_allocPage(0xD0001000, 1, vmm_kernelDirectory);
-    vmm_freePage(0xA0001000, vmm_kernelDirectory);
+    Heap *heap = heap_create(vmm_kernelDirectory);
+    char *c = heap_malloc(heap, 10);
+    printk("%p\n", heap->head);
+    printk("%p %p\n", heap, &(heap->size));
+    printk("%p %p\n", &(heap->used), &(heap->head));
 
-    p_uint8 *asd = (p_uint8*)0xA0001000;
-    *asd = 5;
+    printk("%p\n", c);
 
     return;
 }

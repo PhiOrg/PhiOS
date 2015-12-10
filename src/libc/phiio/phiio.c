@@ -3,7 +3,7 @@
 #include <phistr.h>
 #include <rtc.h>
 
-static void __printk_time(RTC *rtc)
+static void __printk_time(const RTC *rtc)
 {
     if (rtc->days < 10)
         printk("0%u.", rtc->days);
@@ -33,7 +33,7 @@ static void __printk_time(RTC *rtc)
         printk("%u", rtc->seconds);
 }
 
-void printk(str) char str[];
+void printk(str) const char str[];
 {
     p_uint32 *p = (p_uint32*) &str;
     int strlen = phistr_len(str);
@@ -57,23 +57,23 @@ void printk(str) char str[];
                     p++;
                     break;
                 case 'd':
-                    vga_putSignedNumber(*p);
+                    vga_putSignedNumber((p_sint32)*p);
                     p++;
                     break;
                 case 'u':
-                    vga_putUnsignedNumber(*p);
+                    vga_putUnsignedNumber((p_uint32)*p);
                     p++;
                      break;
                 case 'c':
-                    vga_putChar(*p);
+                    vga_putChar((char)*p);
                     p++;
                     break;
                 case 'p':
-                    vga_putAddress(*p, 1, 1);
+                    vga_putAddress((p_size_t)*p, 1, 1);
                     p++;
                     break;
                 case 't':
-                    __printk_time(*p);
+                    __printk_time((RTC*)*p);
                     p++;
                     break;
             }

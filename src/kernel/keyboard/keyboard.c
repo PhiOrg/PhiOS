@@ -7,7 +7,7 @@
 #include <irq.h>
 #endif
 
-unsigned char keyboardMap[] = {
+static const unsigned char keyboardMap[] = {
                       0, ESC, '1', '2', '3', '4', '5', '6', '7', '8', '9', '0',
                       '-', '=', BACKSPACE, TAB, 'q', 'w', 'e', 'r', 't', 'y',
                       'u', 'i', 'o', 'p', '[', ']', ENTER, CTRL, 'a', 's', 'd',
@@ -16,9 +16,9 @@ unsigned char keyboardMap[] = {
                       '*', ALT, ' ', CAPSLOCK, F1, F2, F3, F4, F5, F6, F7, F8,
                       F9, F10, NUMLOCK, 0, HOME, UP, PGUP,'-', LEFT, '5', RIGHT,
                       '+', END, DOWN, PGDN, INS, DEL, 0, 0, 0, F11, F12
-                      };
+};
 
-unsigned char keyboardMapShift[] = { 
+static const unsigned char keyboardMapShift[] = { 
                             0, ESC, '!', '@', '#', '$', '%', '^', '&', '*', '(',
                             ')', '_', '+', BACKSPACE, TAB, 'Q', 'W', 'E', 'R',
                             'T', 'Y', 'U', 'I', 'O', 'P', '{', '}', ENTER, CTRL,
@@ -28,9 +28,9 @@ unsigned char keyboardMapShift[] = {
                             F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, NUMLOCK, 0,
                             HOME, UP, PGUP, '-', LEFT, '5', RIGHT, '+', END, DOWN,
                             PGDN, INS, DEL, 0, 0, 0, F11, F12
-                            };
+};
 
-p_uint8 shift = 0, capslock = 0;
+static p_bool shift = p_false, capslock = p_false;
 
 static void keyboard_handler(__attribute__ ((unused)) Registers regs)
 {
@@ -40,7 +40,7 @@ static void keyboard_handler(__attribute__ ((unused)) Registers regs)
 
     if (code == 170 || code == 182)
     {
-        shift = 0;
+        shift = p_false;
         return;
     }
 
@@ -55,7 +55,7 @@ static void keyboard_handler(__attribute__ ((unused)) Registers regs)
 
     if (key == LSHIFT || key == RSHIFT)
     {
-        shift = 1;
+        shift = p_true;
         return;
     }
 
@@ -71,7 +71,7 @@ static void keyboard_handler(__attribute__ ((unused)) Registers regs)
 
 void keyboard_init(void)
 {
-    shift = 0;
+    shift = p_false;
     isr_registerInterruptHandler(IRQ1, &keyboard_handler);
 }
 

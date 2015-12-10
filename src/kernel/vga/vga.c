@@ -10,8 +10,8 @@
 
 static p_uint16 *vga_videoMemory = (p_uint16*)0xb8000;
 static p_uint16 row = 0, column = 0, tabSize = 4;
-enum vga_color background = COLOR_BLACK;
-enum vga_color foreground = COLOR_LIGHT_GRAY;
+static enum vga_color background = COLOR_BLACK;
+static enum vga_color foreground = COLOR_LIGHT_GRAY;
 
 static void __vga_moveCursor(void)
 {
@@ -120,7 +120,7 @@ void vga_putString(const char *str)
         vga_putChar(str[i++]);
 }
 
-void vga_putSignedNumber(p_s32int number)
+void vga_putSignedNumber(p_sint32 number)
 {
     if (number < 0)
     {
@@ -131,10 +131,10 @@ void vga_putSignedNumber(p_s32int number)
     vga_putUnsignedNumber(number);
 }
 
-void vga_putUnsignedNumber(p_u32int number)
+void vga_putUnsignedNumber(p_uint32 number)
 {
-    p_s8int i = 0;
-    char str[20];
+    p_sint8 i = 0;
+    char str[10];
 
     do
     {
@@ -157,7 +157,7 @@ void vga_changeForeground(enum vga_color fg)
     foreground = fg;
 }
 
-void vga_putAddress(p_uint32 x, p_uint8 padding, p_uint8 upperCase)
+void vga_putAddress(p_size_t address, p_bool padding, p_bool upperCase)
 {
     char digits[] = "0123456789ABCDEF";
     char result[10], t;
@@ -167,10 +167,10 @@ void vga_putAddress(p_uint32 x, p_uint8 padding, p_uint8 upperCase)
         for(j = 10; j < 16; ++j)
             digits[j] += 32;
 
-    while(x)
+    while(address)
     {
-        result[i++] = digits[x % 16];
-        x /= 16;
+        result[i++] = digits[address % 16];
+        address /= 16;
     }
 
     if(padding)

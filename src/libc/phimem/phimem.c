@@ -2,7 +2,7 @@
 
 void phimem_cpy(const void *source, void *destination, p_size_t length)
 {
-    if (source == 0 || destination == 0)
+    if (source == P_NULL || destination == P_NULL)
         return;
 
     const char *s = (char*) source;
@@ -17,6 +17,9 @@ void phimem_cpy(const void *source, void *destination, p_size_t length)
 
 void phimem_swap(void *a, void *b, p_size_t length)
 {
+    if (a == P_NULL || b == P_NULL)
+        return;
+
     char *x = (char*) a, *y = (char*) b, t;
 
     while (length--)
@@ -31,6 +34,9 @@ void phimem_swap(void *a, void *b, p_size_t length)
 
 void phimem_set(void *a, p_size_t length)
 {
+    if (a == P_NULL)
+        return;
+
     char *x = (char*) a;
 
     while (length--)

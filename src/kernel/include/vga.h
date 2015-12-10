@@ -29,15 +29,15 @@ void vga_putChar(const char);
 
 void vga_putString(const char*);
 
-void vga_putSignedNumber(p_s32int);
+void vga_putSignedNumber(p_sint32);
 
-void vga_putUnsignedNumber(p_u32int);
+void vga_putUnsignedNumber(p_uint32);
 
 void vga_changeBackground(enum vga_color);
 
 void vga_changeForeground(enum vga_color);
 
-void vga_putAddress(p_cuint32 x, p_cuint8 padding, p_cuint8 upperCase);
+void vga_putAddress(p_size_t, p_bool, p_bool);
 
 #endif
 

@@ -12,7 +12,7 @@ p_size_t phistr_len(const char *str)
     return size;
 }
 
-p_uint8 pshistr_cmp(const char *a, const char *b)
+p_sint8 pshistr_cmp(const char *a, const char *b)
 {
     if (!a || !b)
         return -2;

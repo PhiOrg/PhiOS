@@ -3,9 +3,11 @@
 #include <bitmap.h>
 #include <memory/defines.h>
 
-p_uint32 pmm_framesNumber, *pmm_frames, pmm_freeFramesNumber;
+static p_uint32 pmm_framesNumber;
+static p_uint32 *pmm_frames;
+static p_uint32 pmm_freeFramesNumber;
 
-void pmm_init(p_uint32 ramSize)
+void pmm_init(p_cuint32 ramSize)
 {
     pmm_framesNumber = ramSize / FRAME_SIZE_IN_KB;
     pmm_freeFramesNumber = pmm_framesNumber;
@@ -20,18 +22,21 @@ void pmm_init(p_uint32 ramSize)
         pmm_frames[i] = 0x0;
 }
 
-p_sint32 pmm_allocFrame(p_uint32 index)
+p_uint32 pmm_allocFrame(p_cuint32 index)
 {
     if (index >= pmm_framesNumber)
-        return -1;
+        return ALLOC_ERROR;
+
+    if (bitmap_testBit(pmm_frames[index / BITS], BITS - 1 - index % BITS))
+        return ALLOC_ERROR;
 
     pmm_freeFramesNumber--;
     bitmap_setBit(&pmm_frames[index / BITS], BITS - 1 - index % BITS);
 
-    return 0;
+    return ALLOC_SUCCESS;
 }
 
-p_uint32 pmm_getFreeFrame()
+p_uint32 pmm_getFreeFrame(void)
 {
     if (pmm_freeFramesNumber == 0)
         return ALLOC_ERROR;
@@ -43,23 +48,26 @@ p_uint32 pmm_getFreeFrame()
     return ALLOC_ERROR;
 }
 
-p_sint32 pmm_freeFrame(p_uint32 index)
+p_uint32 pmm_freeFrame(p_cuint32 index)
 {
     if (index >= pmm_framesNumber)
-        return -1;
+        return FREE_ERROR;
+
+    if (bitmap_testBit(pmm_frames[index / BITS], BITS - 1 - index % BITS))
+        return FREE_ERROR;
 
     pmm_freeFramesNumber++;
     bitmap_freeBit(&pmm_frames[index / BITS], BITS - 1 - index % BITS);
 
-    return 0;
+    return FREE_SUCCESS;
 }
 
-p_uint32 pmm_getFramesNumber()
+p_uint32 pmm_getFramesNumber(void)
 {
     return pmm_framesNumber;
 }
 
-p_uint32 pmm_getFreeFramesNumber()
+p_uint32 pmm_getFreeFramesNumber(void)
 {
     return pmm_freeFramesNumber;
 }

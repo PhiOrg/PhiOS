@@ -26,14 +26,14 @@ typedef struct page_directory_t
     p_uint32 physicalAddress;                  // the physical address of physicalTables
 } PageDirectory;
 
-void vmm_init();
+void vmm_init(void);
 void vmm_pageFault(Registers);
 void vmm_switchPageDirectory(PageDirectory*);
-void vmm_enablePaging();
+void vmm_enablePaging(void);
 void vmm_allocPage(p_uint32, p_uint32, PageDirectory*);
 void vmm_freePage(p_uint32, PageDirectory*);
 void vmm_allocArea(p_uint32, p_uint32, p_uint32, PageDirectory*);
-void vmm_disablePaging();
+void vmm_disablePaging(void);
 void vmm_freeArea(p_uint32, p_uint32, PageDirectory*);
 
 /**

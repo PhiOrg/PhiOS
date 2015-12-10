@@ -25,7 +25,7 @@ static p_uint32* __vmm_getPage(p_uint32 address, p_uint32 make, PageDirectory *p
     return P_NULL;
 }
 
-static void __vmm_initKernelDirectory()
+static void __vmm_initKernelDirectory(void)
 {
     p_uint32 phys;
     for (p_uint32 i = 0; i < MAX_PAGE_TABLES; i++)
@@ -101,7 +101,7 @@ void vmm_freeArea(p_uint32 fromVirtualAddress, p_uint32 toVirtualAddress,
         vmm_freePage(i, pg);
 }
 
-void vmm_init()
+void vmm_init(void)
 {
     vmm_kernelDirectory = (PageDirectory*) kheap_kmalloc_a(sizeof(PageDirectory));
     phimem_set(vmm_kernelDirectory, sizeof(PageDirectory));
@@ -115,7 +115,7 @@ void vmm_init()
     vmm_enablePaging();
 }
 
-void vmm_disablePaging()
+void vmm_disablePaging(void)
 {
     p_uint32 cr0;
     asm volatile("mov %%cr0, %0" : "=r"(cr0));
@@ -142,7 +142,7 @@ void vmm_switchPageDirectory(PageDirectory *pg)
     asm volatile("mov %0, %%cr3" :: "r"(pg->physicalTables));
 }
 
-void vmm_enablePaging()
+void vmm_enablePaging(void)
 {
     p_uint32 cr0;
     asm volatile("mov %%cr0, %0" : "=r"(cr0));

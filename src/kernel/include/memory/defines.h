@@ -23,7 +23,10 @@
 /*
  * Errors codes.
  */
-#define ALLOC_ERROR 0xFFFFFFFF
+#define ALLOC_ERROR     0xFFFFFFFF
+#define FREE_ERROR      0xFFFFFFFF
+#define ALLOC_SUCCESS   0x00000000
+#define FREE_SUCCESS    0x00000000
 
 #endif
 

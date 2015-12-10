@@ -15,7 +15,7 @@ p_size_t phistr_len(const char*);
  *  0 if a == b
  *  1 if a > b
  */
-p_uint8 phistr_cmp(const char *a, const char *b);
+p_sint8 phistr_cmp(const char *a, const char *b);
 
 /*
  * Reverses the string.

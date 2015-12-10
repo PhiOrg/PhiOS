@@ -14,9 +14,9 @@ typedef struct rtc
     p_uint8 centuries;
 } RTC;
 
-void rtc_init();
-void rtc_read();
-RTC* rtc_getRTC();
+void rtc_init(void);
+void rtc_read(void);
+RTC* rtc_getRTC(void);
 
 #endif
 

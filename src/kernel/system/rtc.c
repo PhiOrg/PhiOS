@@ -6,7 +6,7 @@
 #include <interrupts.h>
 #endif
 
-RTC *rtc = P_NULL;
+static RTC *rtc = P_NULL;
 
 #define CMOS_ADDRESS    0x70
 #define CMOS_DATA       0x71
@@ -19,7 +19,7 @@ RTC *rtc = P_NULL;
 #define YEARS_KEY       0x09
 #define CENTURIES_KEY   0x32
 
-static p_uint8 __rtc_checkIfUpdateIsInProgress()
+static p_uint8 __rtc_checkIfUpdateIsInProgress(void)
 {
     interrupts_cli();
 
@@ -31,7 +31,7 @@ static p_uint8 __rtc_checkIfUpdateIsInProgress()
     return ret;
 }
 
-static p_uint8 __rtc_getRegisterValue(p_uint8 reg)
+static p_uint8 __rtc_getRegisterValue(p_cuint8 reg)
 {
     interrupts_cli();
 
@@ -45,14 +45,14 @@ static p_uint8 __rtc_getRegisterValue(p_uint8 reg)
     return ret;
 }
 
-void rtc_init()
+void rtc_init(void)
 {
     rtc = (RTC*) kheap_kmalloc(sizeof(RTC));
 
     rtc_read();
 }
 
-void rtc_read()
+void rtc_read(void)
 {
     if (rtc == P_NULL)
         return;
@@ -82,7 +82,7 @@ void rtc_read()
         rtc->hours = ((rtc->hours & 0x7F) + 12) % 24;
 }
 
-RTC* rtc_getRTC()
+RTC* rtc_getRTC(void)
 {
     return rtc;
 }

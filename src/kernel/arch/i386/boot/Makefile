@@ -1,9 +1,12 @@
 AFLAGS = -f elf32
 
-all: kernel.o
+all: kernel.o | silent
 
 kernel.o: kernel.asm
-	nasm $(AFLAGS) -o $@ $<
+	@nasm $(AFLAGS) -o $@ $<
+
+silent:
+	@:
 
 clean:
 	-rm *.o

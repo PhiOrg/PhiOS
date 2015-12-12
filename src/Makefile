@@ -1,3 +1,7 @@
+ifndef VERBOSE
+    MAKEFLAGS += --no-print-directory
+endif
+
 FLAGS = -m elf_i386 -T kernel/arch/i386/linker.ld -o
 OBJS = kernel/arch/i386/boot/kernel.o \
        kernel/phi_main.o \
@@ -26,23 +30,88 @@ OBJS = kernel/arch/i386/boot/kernel.o \
        libc/phiio/phiio.o
 
 myApp:
-	@echo "Compiling libc"
-	cd libc/phimem; make
-	cd libc/phistr; make
-	cd libc/phiio; make
-	@echo "\nCompiling kernel"
-	cd kernel; make
-	cd kernel/arch/i386; make
-	cd kernel/vga; make
-	cd kernel/keyboard; make
-	cd kernel/memory; make
-	cd kernel/system; make
-	cd kernel/arch/i386/io; make
-	cd kernel/arch/i386/interrupts; make
-	cd kernel/arch/i386/boot; make
-	ld $(FLAGS) PhiOS.elf $(OBJS)
-	cp PhiOS.elf ../isodir/boot/PhiOS.elf
-	grub-mkrescue -o PhiOS.iso ../isodir
+	@tput setaf 2
+	@echo "COMPILING LIBC"
+	
+	@echo "Compiling phimem"
+	@tput sgr 0
+	@cd libc/phimem; make
+	
+	@tput setaf 2
+	@echo "Compiling phistr"
+	@tput sgr 0
+	@cd libc/phistr; make
+	
+	@tput setaf 2
+	@echo "Compiling phiio"
+	@tput sgr 0
+	@cd libc/phiio; make
+	
+	
+	
+	@tput setaf 2
+	@echo "\nCOMPILING KERNEL"
+	
+	@echo "Compiling kernel"
+	@tput sgr 0
+	@cd kernel; make
+	
+	@tput setaf 2
+	@echo "Compiling i386"
+	@tput sgr 0
+	@cd kernel/arch/i386; make
+	
+	@tput setaf 2
+	@echo "Compiling vga"
+	@tput sgr 0
+	@cd kernel/vga; make
+	
+	@tput setaf 2
+	@echo "Compiling keyboard"
+	@tput sgr 0
+	@cd kernel/keyboard; make
+	
+	@tput setaf 2
+	@echo "Compiling memory"
+	@tput sgr 0
+	@cd kernel/memory; make
+	
+	@tput setaf 2
+	@echo "Compiling system"
+	@tput sgr 0
+	@cd kernel/system; make
+	
+	@tput setaf 2
+	@echo "Compiling io"
+	@tput sgr 0
+	@cd kernel/arch/i386/io; make
+	
+	@tput setaf 2
+	@echo "Compiling interrupts"
+	@tput sgr 0
+	@cd kernel/arch/i386/interrupts; make
+	
+	@tput setaf 2
+	@echo "Compiling boot"
+	@tput sgr 0
+	@cd kernel/arch/i386/boot; make
+	
+	
+	@echo ""
+	
+	
+	@tput setaf 2
+	@echo "Linking ..."
+	@tput sgr 0
+	@ld $(FLAGS) PhiOS.elf $(OBJS)
+	
+	
+	@tput setaf 2
+	@echo ""
+	@echo "Creating .iso"
+	@tput sgr 0
+	@cp PhiOS.elf ../isodir/boot/PhiOS.elf
+	@grub-mkrescue -o PhiOS.iso ../isodir
 
 clean:
 	cd libc/phimem; make clean

@@ -7,12 +7,12 @@
 
 #include <sys/types.h>
 
-p_uint32 pmm_allocFrame(p_cuint32);
-p_uint32 pmm_getFreeFrame(void);
-p_uint32 pmm_freeFrame(p_cuint32);
-p_uint32 pmm_getFramesNumber(void);
-p_uint32 pmm_getFreeFramesNumber(void);
-void pmm_init(p_cuint32);
+p_size_t pmm_allocFrame(p_size_t);
+p_size_t pmm_getFreeFrame(void);
+p_size_t pmm_freeFrame(p_size_t);
+p_size_t pmm_getFramesNumber(void);
+p_size_t pmm_getFreeFramesNumber(void);
+void pmm_init(p_size_t);
 
 #endif
 

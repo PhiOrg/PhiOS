@@ -12,7 +12,7 @@ typedef struct heap
 } Heap;
 
 Heap* heap_create(PageDirectory*);
-void* heap_malloc(Heap*, p_size_t);
+void* heap_malloc(Heap*, p_size_t, PageDirectory*);
 
 #endif
 

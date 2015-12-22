@@ -6,7 +6,7 @@ Heap* heap_create(PageDirectory *pg)
     if (pg == P_NULL)
         return P_NULL;
 
-    p_uint32 frameIndex = vmm_getNFreePages(1);
+    p_uint32 frameIndex = vmm_getNFreePages(1, pg);
     if (frameIndex == ALLOC_ERROR)
         return P_NULL;
 
@@ -31,7 +31,7 @@ p_bool __heap_checkAddresses(p_size_t firstAddress, p_size_t secondAddress)
     return p_false;
 }
 
-void* heap_malloc(Heap *heap, p_size_t size)
+void* heap_malloc(Heap *heap, p_size_t size, PageDirectory* pg)
 {
     if (heap == P_NULL || size == 0)
         return P_NULL;
@@ -53,7 +53,7 @@ void* heap_malloc(Heap *heap, p_size_t size)
             if ((size + sizeof(List)) % FRAME_SIZE)
                 pagesNeededNumber++;
 
-            p_uint32 frameIndex = vmm_getNFreePages(pagesNeededNumber);
+            p_uint32 frameIndex = vmm_getNFreePages(pagesNeededNumber, pg);
             if (frameIndex == ALLOC_ERROR)
                 return P_NULL;
 
@@ -66,6 +66,6 @@ void* heap_malloc(Heap *heap, p_size_t size)
         }
     }
 
-    if ()
+ //   if ()
 }
 

@@ -11,13 +11,24 @@ Heap* heap_create(PageDirectory *pg)
         return P_NULL;
 
     Heap *heap = (Heap*)(frameIndex * FRAME_SIZE);
-    vmm_allocPage((p_uint32) heap, 1, pg);
+    vmm_allocPage((p_uint32) heap, PAGE_PRESENT, pg);
 
     heap->size = FRAME_SIZE;
     heap->used = 0;
     heap->head = P_NULL;
 
     return heap;
+}
+
+/**
+ * Check if two addressed are in the same page.
+ */
+p_bool __heap_checkAddresses(p_size_t firstAddress, p_size_t secondAddress)
+{
+    if (firstAddress & MAGIC_ALIGN == secondAddress & MAGIC_ALIGN)
+        return p_true;
+
+    return p_false;
 }
 
 void* heap_malloc(Heap *heap, p_size_t size)
@@ -45,11 +56,16 @@ void* heap_malloc(Heap *heap, p_size_t size)
             p_uint32 frameIndex = vmm_getNFreePages(pagesNeededNumber);
             if (frameIndex == ALLOC_ERROR)
                 return P_NULL;
+
+            heap->head = (List*) (frameIndex * FRAME_SIZE);
+            heap->head->next = P_NULL;
+            heap->head->size = size;
+            heap->used += size;
+
+            return (void*) ((p_uint8*)heap->head + sizeof(List));
         }
     }
-    else
-    {
 
-    }
+    if ()
 }
 

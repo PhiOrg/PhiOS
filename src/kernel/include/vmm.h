@@ -37,10 +37,9 @@ void vmm_disablePaging(void);
 void vmm_freeArea(p_size_t, p_size_t, PageDirectory*);
 
 /**
- *  Search n free page in vmm_kernelDirectory and returns the index of the first
- *  free page.
+ *  Search n free page in PageDirectory and returns the virtual address.
  */
-p_size_t vmm_getNFreePages(p_size_t);
+p_size_t vmm_getNFreePages(p_size_t, PageDirectory*);
 
 #endif
 

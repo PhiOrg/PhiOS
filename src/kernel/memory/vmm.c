@@ -12,7 +12,7 @@ extern p_size_t pmm_framesNumber, pmm_freeFramesNumber;
 PageDirectory *vmm_kernelDirectory, *vmm_currentDirectory;
 p_uint32 vmm_enabledPaging = 0;
 
-static p_size_t* __vmm_getPage(p_size_t address, p_size_t make, PageDirectory *pg)
+static p_size_t* __vmm_getPage(p_size_t address, PageDirectory *pg)
 {
     address /= FRAME_SIZE;
     p_size_t tableIndex = address / MAX_PAGE_TABLES;
@@ -21,12 +21,20 @@ static p_size_t* __vmm_getPage(p_size_t address, p_size_t make, PageDirectory *p
     {
         return &pg->tables[tableIndex]->pages[address % MAX_PAGES_IN_TABLE];
     }
+    else
+    {
+        // something is wrong...
+    }
 
     return P_NULL;
 }
 
 static void __vmm_initKernelDirectory(void)
 {
+#ifdef PhiOS32
+    vmm_kernelDirectory = (PageDirectory*) kheap_kmalloc_a(sizeof(PageDirectory));
+    phimem_set(vmm_kernelDirectory, sizeof(PageDirectory));
+
     p_size_t phys;
     for (p_size_t i = 0; i < MAX_PAGE_TABLES; i++)
     {
@@ -34,40 +42,74 @@ static void __vmm_initKernelDirectory(void)
         phimem_set(vmm_kernelDirectory->tables[i], sizeof(PageTable));
         vmm_kernelDirectory->physicalTables[i] = phys | PHYSICAL_TABLES_FLAGS;
     }
+
+    vmm_allocArea(0x0, kheap_placementAddress,
+                  PAGE_READ_WRITE | PAGE_PRESENT, vmm_kernelDirectory);
+#endif
 }
 
-p_size_t vmm_getNFreePages(p_size_t size)
+p_size_t vmm_getNFreePages(p_size_t size, PageDirectory *pg)
 {
-    if (pmm_getFreeFramesNumber() < size)
+    if (pg == P_NULL)
+    {
+        // something is wrong
         return ALLOC_ERROR;
+    }
+    if (pmm_getFreeFramesNumber() < size)
+    {
+        // something is wrong
+        return ALLOC_ERROR;
+    }
 
-    p_size_t *pointer = (p_size_t*) vmm_kernelDirectory->tables[0];
+    p_size_t retAddress = P_NULL;
+    p_size_t copyOfSize = size;
 
-    for (p_size_t index = 0; index < MAX_PAGES; index++)
-        if (pointer[index] == 0)
+    for (p_size_t i = 0; i < MAX_PAGE_TABLES; i++)
+    {
+        if (pg->tables[i])
         {
-            p_size_t __size = size - 1, __index = index;
-            index++;
-
-            while (pointer[index] == 0 && __size != 0)
+            for (p_size_t j = 0; j < MAX_PAGES_IN_TABLE; j++)
             {
-                index++;
-                __size--;
+                if (pg->tables[i]->pages[j] == 0)
+                {
+                    if (copyOfSize == size)
+                        retAddress = i * j * FRAME_SIZE;
+
+                    copyOfSize--;
+                    if (copyOfSize == 0)
+                        return retAddress;
+                }
+                else
+                {
+                    copyOfSize = size;
+                }
             }
-
-            if (__size == 0)
-                return __index;
         }
+        else
+        {
+            // alloc 4mb virtual memory
+        }
+    }
 
+    // something is wrong
     return ALLOC_ERROR;
 }
 
 void vmm_allocPage(p_size_t virtualAddress, p_size_t flags, PageDirectory *pg)
 {
-    p_size_t *page = __vmm_getPage(virtualAddress, 1, pg);
+    p_size_t *page = __vmm_getPage(virtualAddress, pg);
+
+    if (page == P_NULL)
+    {
+        // something is wrong
+        return;
+    }
 
     if (*page != 0)
+    {
+        // something is wrong
         return;
+    }
 
     p_size_t frameIndex = pmm_getFreeFrame();
     p_size_t physicalAddress = frameIndex * FRAME_SIZE;
@@ -103,12 +145,7 @@ void vmm_freeArea(p_size_t fromVirtualAddress, p_size_t toVirtualAddress,
 
 void vmm_init(void)
 {
-    vmm_kernelDirectory = (PageDirectory*) kheap_kmalloc_a(sizeof(PageDirectory));
-    phimem_set(vmm_kernelDirectory, sizeof(PageDirectory));
     __vmm_initKernelDirectory();
-
-    vmm_allocArea(0x0, kheap_placementAddress,
-                  PAGE_READ_WRITE | PAGE_PRESENT, vmm_kernelDirectory);
 
     isr_registerInterruptHandler(14, vmm_pageFault);
     vmm_switchPageDirectory(vmm_kernelDirectory);

@@ -12,6 +12,13 @@ extern p_size_t pmm_framesNumber, pmm_freeFramesNumber;
 PageDirectory *vmm_kernelDirectory, *vmm_currentDirectory;
 p_uint32 vmm_enabledPaging = 0;
 
+#ifdef PhiArch_i386
+#define READ_CR0(x) asm volatile("mov %%cr0, %0" : "=r"(x))
+#define READ_CR2(x) asm volatile("mov %%cr2, %0" : "=r"(x))
+#define WRITE_CR0(x) asm volatile("mov %0, %%cr0" :: "r"(x))
+#define WRITE_CR3(x) asm volatile("mov %0, %%cr3" :: "r"(x))
+#endif
+
 static p_size_t* __vmm_getPage(p_size_t address, PageDirectory *pg)
 {
     address /= FRAME_SIZE;
@@ -155,9 +162,9 @@ void vmm_init(void)
 void vmm_disablePaging(void)
 {
     p_size_t cr0;
-    asm volatile("mov %%cr0, %0" : "=r"(cr0));
+    READ_CR0(cr0);
     cr0 &= 0x7FFFFFFF;
-    asm volatile("mov %0, %%cr0" :: "r"(cr0));
+    WRITE_CR0(cr0);
 
     vmm_enabledPaging = 0;
 }
@@ -165,7 +172,8 @@ void vmm_disablePaging(void)
 void vmm_pageFault(Registers regs)
 {
     p_size_t cr2;
-    asm volatile("mov %%cr2, %0" : "=r"(cr2));
+    READ_CR2(cr2);
+
     vga_putString("Page fault: ");
     vga_putAddress(cr2, 1, 1);
     vga_putChar('\n');
@@ -176,15 +184,15 @@ void vmm_pageFault(Registers regs)
 void vmm_switchPageDirectory(PageDirectory *pg)
 {
     vmm_currentDirectory = pg;
-    asm volatile("mov %0, %%cr3" :: "r"(pg->physicalTables));
+    WRITE_CR3(pg->physicalTables);
 }
 
 void vmm_enablePaging(void)
 {
     p_size_t cr0;
-    asm volatile("mov %%cr0, %0" : "=r"(cr0));
+    READ_CR0(cr0);
     cr0 |= 0x80000000;
-    asm volatile("mov %0, %%cr0" :: "r"(cr0));
+    WRITE_CR0(cr0);
 
     vmm_enabledPaging = 1;
 }

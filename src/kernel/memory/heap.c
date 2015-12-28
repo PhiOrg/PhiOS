@@ -6,11 +6,10 @@ Heap* heap_create(PageDirectory *pg)
     if (pg == P_NULL)
         return P_NULL;
 
-    p_uint32 frameIndex = vmm_getNFreePages(1, pg);
-    if (frameIndex == ALLOC_ERROR)
+    Heap *heap = (Heap*) vmm_getNFreePages(1, pg);
+    if (heap == P_NULL)
         return P_NULL;
 
-    Heap *heap = (Heap*)(frameIndex * FRAME_SIZE);
     vmm_allocPage((p_uint32) heap, PAGE_PRESENT, pg);
 
     heap->size = FRAME_SIZE;

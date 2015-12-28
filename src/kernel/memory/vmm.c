@@ -80,7 +80,7 @@ p_size_t vmm_getNFreePages(p_size_t size, PageDirectory *pg)
                 if (pg->tables[i]->pages[j] == 0)
                 {
                     if (copyOfSize == size)
-                        retAddress = i * j * FRAME_SIZE;
+                        retAddress = (i * MAX_PAGES_IN_TABLE + j) * FRAME_SIZE;
 
                     copyOfSize--;
                     if (copyOfSize == 0)
